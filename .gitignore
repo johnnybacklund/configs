@@ -1,0 +1,10 @@
+# mac specific
+
+envman
+configstore
+gcloud
+iterm2
+jgit
+sanity
+yarn
+.DS_Store
