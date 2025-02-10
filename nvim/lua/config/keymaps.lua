@@ -7,3 +7,16 @@ vim.keymap.set(
   require("telescope.builtin").resume,
   { noremap = true, silent = true, desc = "Resume" }
 )
+
+function insertFullPath()
+  local filepath = vim.fn.expand("%")
+  vim.fn.setreg("*", filepath) -- write to clippoard
+  vim.notify("Copied '" .. filepath .. "'", "info")
+end
+
+vim.keymap.set(
+  "n",
+  "<leader>pc",
+  insertFullPath,
+  { noremap = true, silent = true, desc = "Copy path of current buffer" }
+)
