@@ -8,3 +8,6 @@ jgit
 sanity
 yarn
 .DS_Store
+wslu
+turborepo
+nextjs-nodejs
