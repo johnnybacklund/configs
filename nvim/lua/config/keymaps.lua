@@ -14,6 +14,21 @@ function insertFullPath()
   vim.notify("Copied '" .. filepath .. "'", "info")
 end
 
+-- vim.keymap.set("n", "<leader>ff", function()
+--   require("snacks").pick("files", { root = false })
+-- end)
+
+vim.keymap.set(
+  "n",
+  "<leader><space>",
+  require("telescope.builtin").find_files,
+  { desc = "Find Files (cwd but actually root)" }
+)
+
+vim.keymap.set("n", "<leader>sg", require("telescope.builtin").live_grep, { desc = "Grep (cwd but actually root)" })
+
+-- "<leader>fF"
+--
 vim.keymap.set(
   "n",
   "<leader>pc",
