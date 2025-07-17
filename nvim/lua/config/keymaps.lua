@@ -14,26 +14,70 @@ function insertFullPath()
   vim.notify("Copied '" .. filepath .. "'", "info")
 end
 
-vim.keymap.set({ "n", "x" }, "<leader>fl", function()
-  local text = ""
-  local insert_line = vim.api.nvim_win_get_cursor(0)[1] -- default: current line
+-- vim.keymap.set("n", "<leader>ff", function()
+--   require("snacks").pick("files", { root = false })
+-- end)
 
-  -- Normal mode: get word under cursor
-  local cursor = vim.api.nvim_win_get_cursor(0)
-  insert_line = cursor[1] -- insert below this line
-  text = vim.fn.expand("<cword>")
+vim.keymap.set(
+  "n",
+  "<leader><space>",
+  require("telescope.builtin").find_files,
+  { desc = "Find Files (cwd but actually root)" }
+)
 
-  -- Escape quotes
-  text = text:gsub('"', '\\"')
+vim.keymap.set("n", "<leader>sg", require("telescope.builtin").live_grep, { desc = "Grep (cwd but actually root)" })
 
-  local log = text ~= "" and ("console.log(" .. text .. ");") or "console.log();"
+-- "<leader>fF"
+--
+vim.keymap.set(
+  "n",
+  "<leader>pc",
+  insertFullPath,
+  { noremap = true, silent = true, desc = "Copy path of current buffer" }
+)
 
-  -- Insert the log line one below the target
-  vim.api.nvim_buf_set_lines(0, insert_line, insert_line, false, { log })
+vim.keymap.set("n", "<F5>", function()
+  require("dap").continue()
+end)
+vim.keymap.set("n", "<F10>", function()
+  require("dap").step_over()
+end)
+vim.keymap.set("n", "<F11>", function()
+  require("dap").step_into()
+end)
+vim.keymap.set("n", "<F12>", function()
+  require("dap").step_out()
+end)
+vim.keymap.set("n", "<Leader>db", function()
+  require("dap").toggle_breakpoint()
+end)
+vim.keymap.set("n", "<Leader>B", function()
+  require("dap").set_breakpoint()
+end)
+vim.keymap.set("n", "<Leader>lp", function()
+  require("dap").set_breakpoint(nil, nil, vim.fn.input("Log point message: "))
+end)
+vim.keymap.set("n", "<Leader>dr", function()
+  require("dap").repl.open()
+end)
+vim.keymap.set("n", "<Leader>dl", function()
+  require("dap").run_last()
+end)
+vim.keymap.set({ "n", "v" }, "<Leader>dh", function()
+  require("dap.ui.widgets").hover()
+end)
+vim.keymap.set({ "n", "v" }, "<Leader>dp", function()
+  require("dap.ui.widgets").preview()
+end)
+vim.keymap.set("n", "<Leader>df", function()
+  local widgets = require("dap.ui.widgets")
+  widgets.centered_float(widgets.frames)
+end)
+vim.keymap.set("n", "<Leader>ds", function()
+  local widgets = require("dap.ui.widgets")
+  widgets.centered_float(widgets.scopes)
+end)
 
-  if text == "" then
-    -- Move cursor inside ()
-    vim.api.nvim_win_set_cursor(0, { insert_line + 1, string.find(log, "%(") or 0 })
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("i", true, false, true), "n", true)
-  end
-end, { desc = "Smart console.log()", silent = true })
+vim.keymap.set("n", "<Leader>du", function()
+  require("dapui").toggle({})
+end, { desc = "Dap UI" })
