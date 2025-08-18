@@ -35,3 +35,5 @@ vim.keymap.set(
   insertFullPath,
   { noremap = true, silent = true, desc = "Copy path of current buffer" }
 )
+
+vim.keymap.set({ "n", "v" }, "<leader>y", '"+', { desc = "Choose system register" })
