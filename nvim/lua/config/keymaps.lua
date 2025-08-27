@@ -14,10 +14,14 @@ function insertFullPath()
   vim.notify("Copied '" .. filepath .. "'", "info")
 end
 
--- vim.keymap.set("n", "<leader>ff", function()
---   require("snacks").pick("files", { root = false })
--- end)
+vim.keymap.set(
+  "n",
+  "<leader>pc",
+  insertFullPath,
+  { noremap = true, silent = true, desc = "Copy path of current buffer" }
+)
 
+-- Switch around bindings for find file in telescope
 vim.keymap.set(
   "n",
   "<leader><space>",
@@ -27,13 +31,10 @@ vim.keymap.set(
 
 vim.keymap.set("n", "<leader>sg", require("telescope.builtin").live_grep, { desc = "Grep (cwd but actually root)" })
 
--- "<leader>fF"
---
-vim.keymap.set(
-  "n",
-  "<leader>pc",
-  insertFullPath,
-  { noremap = true, silent = true, desc = "Copy path of current buffer" }
-)
-
 vim.keymap.set({ "n", "v" }, "<leader>y", '"+', { desc = "Choose system register" })
+
+-- Oil bindings
+vim.keymap.set("n", "<BS>", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+vim.keymap.set("n", "<leader>o", function()
+  require("oil").open_float(".")
+end, { desc = "Open Oil floating window" })
