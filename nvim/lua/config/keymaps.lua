@@ -38,3 +38,36 @@ vim.keymap.set("n", "<BS>", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 vim.keymap.set("n", "<leader>o", function()
   require("oil").open_float(".")
 end, { desc = "Open Oil floating window" })
+
+-- Console.log binding
+vim.keymap.set({ "n", "v" }, "<leader>dl", function()
+  local mode = vim.fn.mode()
+
+  local selection
+
+  if mode == "v" then
+    -- Yank the text into the z buffer then get it from there
+    vim.cmd.normal({ '"zy', bang = true })
+    selection = vim.fn.getreg("z")
+
+    print(selection)
+  end
+
+  vim.api.nvim_put({ "console.log();" }, "l", true, true)
+
+  local row = vim.api.nvim_win_get_cursor(0)[1]
+  local line = vim.api.nvim_get_current_line()
+  local start_col = line:find("%(")
+
+  if start_col then
+    -- TODO troubleshoot visual mode thing
+    vim.api.nvim_win_set_cursor(0, { row, start_col }) -- 0-based col
+
+    if mode == "v" and selection then
+      vim.cmd.normal("<Left>")
+      vim.cmd.normal({ '"zp', bang = true })
+    end
+
+    vim.api.nvim_input("i") -- enter insert mode inside ()
+  end
+end, { desc = "Insert console.log()" })
